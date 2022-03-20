@@ -12,6 +12,7 @@
   <typeAliases>
 
     <package name="cn.edu.yibinu.crm.settings.domain"/>
+    <package name="cn.edu.yibinu.crm.workbench.domain"/>
 
   </typeAliases>
 
@@ -31,6 +32,7 @@
  
   <mappers>
       <mapper resource="cn/edu/yibinu/crm/settings/dao/UserDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ActivityDao.xml"/>
   </mappers>
 </configuration>
 

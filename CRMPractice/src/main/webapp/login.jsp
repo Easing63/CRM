@@ -12,6 +12,11 @@
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script>
 		$(function () {
+			//把登录页设置成顶层窗口
+			if(window.top!=window){
+				window.top.location=window.location;
+			}
+
 			//页面加载完毕后，把用户名的input内容清空
 			$("#username").val("");
 			//让页面一进入就把焦点聚集在用户名这一input中
