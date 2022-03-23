@@ -25,17 +25,17 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	<script type="text/javascript">
 
 	$(function(){
-		$("#addBtn").click(function () {
-			//导入时间控件，是需要使用就可以了，因为输入的时间格式没有办法做到格式统一，就让用户进行选择
-			$(".time").datetimepicker({
-				minView: "month",
-				language:  'zh-CN',
-				format: 'yyyy-mm-dd',
-				autoclose: true,
-				todayBtn: true,
-				pickerPosition: "bottom-left"
-			});
+		//导入时间控件，是需要使用就可以了，因为输入的时间格式没有办法做到格式统一，就让用户进行选择
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
 
+		$("#addBtn").click(function () {
 			/*
 				操作模态窗口，需要调用模态窗口的jquery对象，调用modal方法
 				为该方法传递show参数，show表示打开，hide表示关闭模态窗口
@@ -94,9 +94,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                         $("#activityAddForm")[0].reset();
 						//关闭操作的模态窗口
 						$("#createActivityModal").modal("hide");
+						getPageList(1,2);
 					}else{
 						alert("添加失败！");
 					}
+
+					//增加完后返回第一页
+					getPageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 				}
 			})
 		})
@@ -107,7 +111,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#hidden-owner").val($.trim( $("#search-owner").val() ));
 			$("#hidden-startDate").val($.trim( $("#startTime").val() ));
 			$("#hidden-endDate").val($.trim( $("#endTime").val() ));
-			getPageList(1,2);
+
+			//第一个参数：操作后停留在当前页，第二个参数：操作后，维持已经设置好的每一页展示的记录条数
+			getPageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+					,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
 		});
 
 
@@ -172,7 +180,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						 */
 						html += '<tr class="active">';
 						html += '<td><input name="choose" type="checkbox" value="'+ e.id + '"/></td>';
-						html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">' + e.name + '</a></td>';
+						html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+ e.id +'\';">' + e.name + '</a></td>';
 						html += '<td> '+ e.owner + '</td>';
 						html += '<td>' + e.startDate + '</td>';
 						html += '<td>' + e.endDate + '</td>';
@@ -255,6 +263,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							}else{
 								alert("删除市场活动失败");
 							}
+							getPageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+									,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 						}
 					})
 				}
@@ -285,16 +295,65 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					dataType:"json",
 					success:function (data) {
 						//{"uList":[{用户1},{用户2},{}],"a":{市场活动}}
+
+                        //处理所有者的下拉框
 						var html = "";
 						$.each(data.uList,function (i,e) {
-							html += "<option value='+ e.name +'><option/>";
-						})
+							html += "<option value='" + e.id +"'>"+ e.name +"</option>";
+						});
 
 						$("#edit-marketActivityOwner").html(html);
+
+						//将activity的内容填入
+                        $("#edit-id").val(data.a.id);
+                        $("#edit-marketActivityName").val(data.a.name);
+                        $("#edit-marketActivityOwner").val(data.a.owner);
+                        $("#edit-startTime").val(data.a.startDate);
+                        $("#edit-endTime").val(data.a.endDate);
+                        $("#edit-cost").val(data.a.cost);
+                        $("#edit-describe").val(data.a.description);
+
+                        //所有值都填好了之后就打开模态窗口
+                        $("#editActivityModal").modal("show");
+						getPageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 					}
 				})
 			}
 		})		//展现修改的模态窗口
+
+		//为更新按钮绑定事件,执行市场活动修改事件
+		$("#updateBtn").click(function () {
+			$.ajax({
+				url:"workbench/activity/update.do",
+				data:{
+					"id":$.trim($("#edit-id").val()),
+					"owner":$.trim($("#edit-marketActivityOwner").val()),
+					"name":$.trim($("#edit-marketActivityName").val()),
+					"startDate":$.trim($("#edit-startTime").val()),
+					"endDate":$.trim($("#edit-endTime").val()),
+					"cost":$.trim($("#edit-cost").val()),
+					"description":$.trim($("#edit-describe").val())
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					//{"success":true/false}
+					if(data.success){
+						//刷新市场活动信息表
+
+						//将模态窗口中的数据清空，不需要，以为这个代码在重新请求的时候会刷新
+						//$("#activityAddForm")[0].reset();
+						//关闭修改操作的模态窗口
+						$("#editActivityModal").modal("hide");
+						getPageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+					}else{
+						alert("修改市场活动失败！");
+					}
+				}
+			})
+		})
 
 	});	//页面加载完成函数
 	
@@ -369,7 +428,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- 修改市场活动的模态窗口 -->
 	<div class="modal fade" id="editActivityModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 85%;">
@@ -383,6 +442,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form">
+
+                        <!--
+                            用隐藏域来保存activity的id字段
+                        -->
+                        <input type="hidden" id="edit-id">
 					
 						<div class="form-group">
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>

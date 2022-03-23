@@ -1,0 +1,17 @@
+package cn.edu.yibinu.crm.workbench.dao;
+
+import cn.edu.yibinu.crm.workbench.domain.ActivityRemark;
+
+import java.util.List;
+
+public interface ActivityRemarkDao {
+    int getCountByAids(String[] ids);
+
+    int deleteByAids(String[] ids);
+
+    List<ActivityRemark> getRemarkListById(String activityId);
+
+    int deleteRemark(String id);
+
+    int saveRemark(ActivityRemark ar);
+}

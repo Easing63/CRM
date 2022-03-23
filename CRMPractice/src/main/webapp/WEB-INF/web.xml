@@ -68,6 +68,51 @@
         <url-pattern>/workbench/activity/getUserList.do</url-pattern>
     </servlet-mapping>
 
+    <!--查询市场活动列表控制器-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/getPageList.do</url-pattern>
+    </servlet-mapping>
 
+    <!--删除市场活动的控制器-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/delete.do</url-pattern>
+    </servlet-mapping>
+
+    <!--修改市场活动-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/getUserListAndActivity.do</url-pattern>
+    </servlet-mapping>
+
+    <!--修改市场活动保存的按钮-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/update.do</url-pattern>
+    </servlet-mapping>
+
+    <!--市场活动详情信息页，是通过传统请求加上转发来实现的-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/detail.do</url-pattern>
+    </servlet-mapping>
+    <!--市场活动获取备注-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/getRemarkListById.do</url-pattern>
+    </servlet-mapping>
+
+    <!--删除市场活动备注-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/deleteRemark.do</url-pattern>
+    </servlet-mapping>
+
+    <!--添加市场活动备注-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
+    </servlet-mapping>
 
 </web-app>
