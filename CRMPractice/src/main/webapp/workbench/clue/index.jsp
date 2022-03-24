@@ -21,6 +21,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript">
 
 	$(function(){
+	    
 		$(".time").datetimepicker({
 			minView: "month",
 			language:  'zh-CN',
