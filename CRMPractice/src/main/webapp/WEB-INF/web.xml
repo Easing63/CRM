@@ -39,6 +39,10 @@
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
+    <listener>
+        <listener-class>cn.edu.yibinu.crm.settings.web.listenler.SysInitListenler</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>UserController</servlet-name>
         <servlet-class>cn.edu.yibinu.crm.settings.web.controller.UserController</servlet-class>
@@ -47,6 +51,11 @@
     <servlet>
         <servlet-name>ActivityController</servlet-name>
         <servlet-class>cn.edu.yibinu.crm.workbench.web.controller.ActivityController</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ClueController</servlet-name>
+        <servlet-class>cn.edu.yibinu.crm.workbench.web.controller.ClueController</servlet-class>
     </servlet>
 
 
@@ -113,6 +122,27 @@
     <servlet-mapping>
         <servlet-name>ActivityController</servlet-name>
         <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
+    </servlet-mapping>
+
+    <!--修改市场活动备注-->
+    <servlet-mapping>
+        <servlet-name>ActivityController</servlet-name>
+        <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
+    </servlet-mapping>
+
+
+
+    <!--线索-->
+    <!--创建线索按钮局部刷新拥有者-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/getUserList.do</url-pattern>
+    </servlet-mapping>
+
+    <!--保存线索事件-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/save.do</url-pattern>
     </servlet-mapping>
 
 </web-app>

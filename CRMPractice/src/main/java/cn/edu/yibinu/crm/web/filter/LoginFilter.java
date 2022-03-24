@@ -21,7 +21,6 @@ public class LoginFilter implements Filter {
         //防止重复重定向导致的死循环
         User user = (User)request.getSession().getAttribute("user");
         String path = request.getServletPath();
-        System.out.println("getServletPath：" + path);
         if("/login.jsp".equals(path) || "/settings/user/login.do".equals(path)){
             //是登录页就要放行
             chain.doFilter(req,resp);

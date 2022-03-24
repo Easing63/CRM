@@ -64,6 +64,32 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         //在页面加载完毕后，展现该市场活动关联的备注信息
 		showRemarkList();
 
+        $("#updateRemarkBtn").click(function () {
+            var id = $("#remarkId").val();
+            $.ajax({
+                url:"workbench/activity/updateRemark.do",
+                data:{
+                    "id":id,
+                    "noteContent":$("#noteContent").val()
+                },
+                type:"post",
+                dataType:"json",
+                success:function (data) {
+                    //{"success":true/false,"ar":{备注对象}}
+                    if(data.success){
+                        //修改备注成功
+                        //更新div中响应的信息，需要更新的信息有：noteContent和editTime和editBy
+                        $("#e"+id).html(data.ar.noteContent);
+                        $("#s"+id).html(data.ar.editTime + "由" + data.ar.editBy);
+                        //更新内容之后关闭模态窗口
+                        $("#editRemarkModal").modal("hide");
+                    }else {
+                        alert("修改备注失败")
+                    }
+                }
+            })
+        })
+
         $("#saveRemarkBtn").click(function () {
             //执行备注的添加操作
             $.ajax({
@@ -87,10 +113,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                         html += '<div id="'+ data.ar.id +'" class="remarkDiv" style="height: 60px;">';
                         html += '<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">';
                         html += '<div style="position: relative; top: -40px; left: 40px;" >';
-                        html += '<h5>' + data.ar.noteContent + '</h5>';
+                        html += '<h5 id="f' + data.ar.id + '">' + data.ar.noteContent + '</h5>';
                         html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;"> '+(data.ar.createTime)+'由'+ (data.ar.createBy)+'</small>';
                         html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-                        html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #ff0000;"></span></a>';
+                        html += '<a class="myHref" href="javascript:void(0);" onclick="editRemarkSave(\''+ data.ar.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #ff0000;"></span></a>';
                         html += '&nbsp;&nbsp;&nbsp;&nbsp;';
                         html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+ data.ar.id +'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
                         html += '</div>';           //动态生成的元素，要使用变量必须要套在字符串当中
@@ -102,9 +128,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                         alert("添加备注失败！")
                     }
                 }
-        })
-	}); //页面加载完毕的函数
-    })
+            })
+	    });
+
+
+    })//页面加载完毕的函数
 	
 	function showRemarkList() {
 		$.ajax({
@@ -121,10 +149,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					html += '<div id="'+ e.id +'" class="remarkDiv" style="height: 60px;">';
 					html += '<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">';
 					html += '<div style="position: relative; top: -40px; left: 40px;" >';
-					html += '<h5>' + e.noteContent + '</h5>';
-					html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;"> '+(e.editFlag==0?e.createTime:e.editTime)+'由'+ (e.editFlag==0?e.createBy:e.editBy)+'</small>';
+					html += '<h5 id="e' + e.id + '">' + e.noteContent + '</h5>';
+					html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;" id="s'+ e.id +'"> '+(e.editFlag==0?e.createTime:e.editTime)+'由'+ (e.editFlag==0?e.createBy:e.editBy)+'</small>';
 					html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-					html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #ff0000;"></span></a>';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="editRemarkShow(\''+ e.id + '\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #ff0000;"></span></a>';
 					html += '&nbsp;&nbsp;&nbsp;&nbsp;';
 					html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+ e.id +'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
 					html += '</div>';           //动态生成的元素，要使用变量必须要套在字符串当中
@@ -160,6 +188,29 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 }
             }
         })
+    }
+
+    function editRemarkShow(id) {
+        //alert(id);
+
+        //打开模态窗口前打开存放指定信息的h5标签
+        $("#remarkId").val(id);     //还要给修改备注表单隐藏域赋值
+        var noteContent = $("#e" + id).html();
+
+        $("#noteContent").val(noteContent);
+
+        $("#editRemarkModal").modal("show");
+
+    }
+
+    function editRemarkSave(id) {
+        $("#remarkId").val(id);
+
+        var noteContent = $("#f" + id).html();
+
+        $("#noteContent").val(noteContent);
+
+        $("#editRemarkModal").modal("show");
     }
 	
 </script>

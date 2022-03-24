@@ -48,9 +48,10 @@ public class ActivityController extends HttpServlet {
             deleteRemark(request,response);
         }else if("/workbench/activity/saveRemark.do".equals(path)){
             saveRemark(request,response);
+        }else if("/workbench/activity/updateRemark.do".equals(path)){
+            updateRemark(request,response);
         }
     }
-
 
     private void save(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("执行市场活动的添加操作");
@@ -251,4 +252,30 @@ public class ActivityController extends HttpServlet {
 
         PrintJson.printJsonObj(response,map);
     }
+
+    private void updateRemark(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("执行修改备注");
+        String id = request.getParameter("id");
+        String noteContent = request.getParameter("noteContent");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User)request.getSession().getAttribute("user")).getName();
+        String editFlag = "1";
+
+        ActivityRemark ar = new ActivityRemark();
+        ar.setId(id);
+        ar.setNoteContent(noteContent);
+        ar.setEditTime(editTime);
+        ar.setEditBy(editBy);
+        ar.setEditFlag(editFlag);
+
+        ActivityService service = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        boolean flag = service.updateRemark(ar);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",flag);
+        map.put("ar",ar);
+
+        PrintJson.printJsonObj(response,map);
+    }
+
 }
