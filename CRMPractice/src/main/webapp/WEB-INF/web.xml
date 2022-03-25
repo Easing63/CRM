@@ -145,4 +145,34 @@
         <url-pattern>/workbench/clue/save.do</url-pattern>
     </servlet-mapping>
 
+    <!--查线索的详情信息-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/detail.do</url-pattern>
+    </servlet-mapping>
+
+    <!--根据clueId查活动信息列表-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/getActivityListByClueId.do</url-pattern>
+    </servlet-mapping>
+
+    <!--接触市场活动和线索的联系-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/unbound.do</url-pattern>
+    </servlet-mapping>
+
+    <!--点击添加关联超链接来获取市场活动信息列表-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/getActivityListByNameNotByClueId.do</url-pattern>
+    </servlet-mapping>
+
+    <!--执行添加关联操作-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/bound.do</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -37,6 +37,7 @@
       <mapper resource="cn/edu/yibinu/crm/settings/dao/DicTypeDao.xml"/>
       <mapper resource="cn/edu/yibinu/crm/settings/dao/DicValueDao.xml"/>
       <mapper resource="cn/edu/yibinu/crm/workbench/dao/ClueDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ClueActivityRelationDao.xml"/>
   </mappers>
 </configuration>
 
