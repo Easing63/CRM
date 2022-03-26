@@ -10,4 +10,6 @@ public interface ClueDao {
     Clue detail(String id);
 
     int unbound(String relationId);
+
+    Clue getClueById(String clueId);
 }

@@ -175,4 +175,10 @@
         <url-pattern>/workbench/clue/bound.do</url-pattern>
     </servlet-mapping>
 
+    <!--为搜索图标按钮打开的模态窗口返回市场活动列表-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/getActivityListByName.do</url-pattern>
+    </servlet-mapping>
+
 </web-app>

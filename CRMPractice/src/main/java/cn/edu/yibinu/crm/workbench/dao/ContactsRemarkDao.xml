@@ -3,8 +3,26 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bjpowernode.crm.workbench.dao.ContactsRemarkDao">
-	
+<mapper namespace="cn.edu.yibinu.crm.workbench.dao.ContactsRemarkDao">
+    <insert id="save">
+        insert into tbl_contacts_remark (
+            id,
+            noteContent,
+            createBy,
+            createTime,
+            editFlag,
+            contactsId
+        )
+
+        values(
+            #{id},
+            #{noteContent},
+            #{createBy},
+            #{createTime},
+            #{editBy},
+            #{contactsId}
+        )
+    </insert>
   	
 </mapper>
 

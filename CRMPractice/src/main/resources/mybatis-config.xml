@@ -32,12 +32,27 @@
  
   <mappers>
       <mapper resource="cn/edu/yibinu/crm/settings/dao/UserDao.xml"/>
+
       <mapper resource="cn/edu/yibinu/crm/workbench/dao/ActivityDao.xml"/>
       <mapper resource="cn/edu/yibinu/crm/workbench/dao/ActivityRemarkDao.xml"/>
+
       <mapper resource="cn/edu/yibinu/crm/settings/dao/DicTypeDao.xml"/>
       <mapper resource="cn/edu/yibinu/crm/settings/dao/DicValueDao.xml"/>
+
       <mapper resource="cn/edu/yibinu/crm/workbench/dao/ClueDao.xml"/>
       <mapper resource="cn/edu/yibinu/crm/workbench/dao/ClueActivityRelationDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ClueRemarkDao.xml"/>
+
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ContactsDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ContactsRemarkDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/ContactsActivityRelationDao.xml"/>
+
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/CustomerDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/CustomerRemarkDao.xml"/>
+
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/TranDao.xml"/>
+      <mapper resource="cn/edu/yibinu/crm/workbench/dao/TranHistoryDao.xml"/>
+
   </mappers>
 </configuration>
 

@@ -4,6 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.yibinu.crm.workbench.dao.ActivityDao">
+    <select id="getActivityListByName" resultType="Activity">
+        select
+            a.id,
+            u.name as owner,
+            a.name,
+            a.startDate,
+            a.endDate
+
+        from tbl_activity a
+        join tbl_user u
+        on u.id=a.owner
+
+        where a.name like '%' #{activityName} '%'
+    </select>
     <select id="getActivityListByNameNotByClueId" resultType="Activity">
         select
             a.id,
