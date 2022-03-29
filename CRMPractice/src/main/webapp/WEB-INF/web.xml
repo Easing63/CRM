@@ -58,6 +58,12 @@
         <servlet-class>cn.edu.yibinu.crm.workbench.web.controller.ClueController</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>TranController</servlet-name>
+        <servlet-class>cn.edu.yibinu.crm.workbench.web.controller.TranController</servlet-class>
+    </servlet>
+
+
 
     <!--用户控制器-->
     <servlet-mapping>
@@ -179,6 +185,59 @@
     <servlet-mapping>
         <servlet-name>ClueController</servlet-name>
         <url-pattern>/workbench/clue/getActivityListByName.do</url-pattern>
+    </servlet-mapping>
+
+    <!--将线索转换成客户和联系人-->
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/convert.do</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <!--交易相关的mapping-->
+
+    <!--获取所有的所有者-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/add.do</url-pattern>
+    </servlet-mapping>
+
+    <!--模糊查询顾客的名字-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/getCustomerName.do</url-pattern>
+    </servlet-mapping>
+
+    <!--执行提交交易表单操作-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/save.do</url-pattern>
+    </servlet-mapping>
+
+    <!--获取单条交易的详细信息-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/detail.do</url-pattern>
+    </servlet-mapping>
+
+    <!--获取交易历史列表的信息-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/getTranHistoryList.do</url-pattern>
+    </servlet-mapping>
+
+    <!--阶段图标改变走的后台-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/changeStage.do</url-pattern>
+    </servlet-mapping>
+
+    <!--获取交易的阶段的数量-->
+    <servlet-mapping>
+        <servlet-name>TranController</servlet-name>
+        <url-pattern>/workbench/transaction/getCharts.do</url-pattern>
     </servlet-mapping>
 
 </web-app>

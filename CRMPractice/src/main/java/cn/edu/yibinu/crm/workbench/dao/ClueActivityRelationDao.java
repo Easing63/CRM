@@ -9,4 +9,6 @@ public interface ClueActivityRelationDao {
     boolean bound(ClueActivityRelation r);
 
     List<ClueActivityRelation> getClueActivityRelationByClueId(String clueId);
+
+    int delete(ClueActivityRelation clueActivityRelation);
 }

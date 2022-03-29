@@ -220,6 +220,46 @@ public class ClueServiceImp implements ClueService {
             if(count6 != 1){
                 flag = false;
             }
+
+            //(7) 如果创建了交易，则创建一条该交易下的交易历史
+            TranHistory th = new TranHistory();
+
+            th.setId(UUIDUtil.getUUID());
+            th.setCreateBy(createBy);
+            th.setCreateTime(createTime);
+            th.setExpectedDate(t.getExpectedDate());
+            th.setMoney(t.getMoney());
+            th.setTranId(t.getId());
+            th.setStage(t.getStage());
+
+            int count7 = tranHistoryDao.save(th);
+
+            if(count7 != 1){
+                flag = false;
+            }
+
+        }
+
+        //(8) 删除线索备注
+        for(ClueRemark clueRemark:clueRemarkList){
+           int count8 = clueRemarkDao.delete(clueRemark);
+           if(count8 != 1){
+               flag = false;
+           }
+        }
+
+        //(9) 删除线索和市场活动的关系
+        for(ClueActivityRelation clueActivityRelation:clueActivityRelationList){
+            int count9 = clueActivityRelationDao.delete(clueActivityRelation);
+            if(count9 != 1){
+                flag = false;
+            }
+        }
+
+        //(10) 删除线索
+        int count10 = clueDao.delete(clueId);
+        if(count10 != 1){
+            flag = false;
         }
         return flag;
     }

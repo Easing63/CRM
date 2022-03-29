@@ -152,7 +152,144 @@
 			}
 		});
 	}
-	
+
+	/*
+	    改变交易阶段：
+	    stage：需要改变的阶段
+	    i：需要改变的阶段对应的下标
+	 */
+	function changeStage(stage,i) {
+        // alert(stage);
+        // alert(i);
+        $.ajax({
+            url:"workbench/transaction/changeStage.do",
+            data:{
+                "id":"${tran.id}",
+                "stage":stage,
+                "money":"${tran.money}",
+                "expectedDate":"${tran.expectedDate}"
+            },
+            type:"post",
+            dataType:"json",
+            success:function (data) {
+                if(data.success){
+                    //刷新阶段以及交易信息
+                    //data:{"success":true/false,"tran":{tran对象}}
+                    $("#stage").html(data.tran.stage);
+                    $("#possibility").html(data.tran.possibility);
+                    $("#editBy").html(data.tran.editBy);
+                    $("#editTime").html(data.tran.editTime);
+
+                    changeIcon(stage,i);
+
+                    //刷新历史交易列表
+                    showTranHistoryList();
+                }else{
+                    alert("改变阶段失败")
+                }
+            }
+        });
+    }
+
+    /*
+        在点击图标后图标也需要跟改变
+        stage：当前图标对应的阶段
+        i：当前的图标对应的下标
+     */
+    function changeIcon(stage,index_temp){
+        //准备currentStage
+        var currentStage = stage;
+        //索引
+        var index = index_temp;
+        //临界点
+        var point = <%=point%>;
+        //当前阶段可能性
+        var currentPossibility = $("#possibility").html();
+
+        /*alert("当前点击的阶段："+currentStage);
+        alert("索引：" + index);
+        alert("临界点：" + point);
+        alert("可能性：" + currentPossibility);*/
+
+        if(currentPossibility == "0"){
+            //说明当前阶段为交易丢失
+
+            //前面七个是黑圈，后面两个一个是红叉，一个是黑叉
+            for (var i = 0; i < point; i++) {
+                //黑圈--------------
+
+                //移除原有样式
+                $("#" + i).removeClass();
+                //添加新样式
+                $("#" + i).addClass("glyphicon glyphicon-record mystage");
+                //添加颜色
+                $("#" + i).css("color","#000000");
+            }
+            for (var i = point; i < <%=dvList.size()%>; i++) {
+                //一个是红叉一个是黑叉
+                if(index == i){
+                    //红叉----------------
+
+                    $("#" + i).removeClass();
+                    //添加新样式
+                    $("#" + i).addClass("glyphicon glyphicon-remove mystage");
+                    //添加颜色
+                    $("#" + i).css("color","#ff0000");
+                }else{
+                    //黑叉----------------
+
+                    $("#" + i).removeClass();
+                    //添加新样式
+                    $("#" + i).addClass("glyphicon glyphicon-remove mystage");
+                    //添加颜色
+                    $("#" + i).css("color","#000000");
+                }
+            }
+
+        //说明是绿圈+绿色标记+黑圈的形式
+        }else{
+            for (var i = 0; i < point; i++) {
+                //遍历前7个
+                if(index == i){
+                    //当前阶段
+                    //绿色标记---------------
+
+                    $("#" + i).removeClass();
+                    //添加新样式
+                    $("#" + i).addClass("glyphicon glyphicon-map-marker mystage");
+                    //添加颜色
+                    $("#" + i).css("color","#90F790");
+                }else if(i < index ){
+                    //小于当前阶段
+                    //绿圈-------------
+
+                    $("#" + i).removeClass();
+                    //添加新样式
+                    $("#" + i).addClass("glyphicon glyphicon-ok-circle mystage");
+                    //添加颜色
+                    $("#" + i).css("color","#90F790");
+                }else{
+                    //大于当前阶段
+                    //黑圈-----------------------
+
+                    $("#" + i).removeClass();
+                    //添加新样式
+                    $("#" + i).addClass("glyphicon glyphicon-record mystage");
+                    //添加颜色
+                    $("#" + i).css("color","#000000");
+                }
+            }
+            for (var i = point; i < <%=dvList.size()%>; i++) {
+                //黑叉---------------------
+
+                $("#" + i).removeClass();
+                //添加新样式
+                $("#" + i).addClass("glyphicon glyphicon-remove mystage");
+                //添加颜色
+                $("#" + i).css("color","#000000");
+            }
+        }
+    }
 	
 	
 </script>
@@ -186,7 +323,131 @@
 			String currentStage = tran.getStage();
 
 			//准备当前阶段的可能性
-			String currentPossiblity = pMap.get(currentStage);
+			String currentPossibility = pMap.get(currentStage);
+
+
+			//判断可能性
+            if("0".equals(currentPossibility)){
+                //当前阶段可能性为0，图标为前七个都是黑圈，后两个一个是红叉，一个是黑叉
+                for (int i = 0; i < dvList.size(); i++) {
+                    //取出DicValue的所有对象的value属性
+                    DicValue dv = dvList.get(i);
+                    String listStage = dv.getValue();
+
+                    //再拿到可能性
+                    String listPossibility = pMap.get(listStage);
+
+                    //说明就是后面两个图标
+                    if ("0".equals(listPossibility)){
+                        //一个黑叉，一个红叉
+                        if(listStage.equals(currentStage)){
+                            //红叉--------------------------------------------------
+            %>
+                <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                      class="glyphicon glyphicon-remove mystage"
+                      data-toggle="popover" data-placement="bottom"
+                      data-content="<%=dv.getText()%>" style="color: #ff0000;"></span>
+                -----------
+            <%
+
+                        }else{
+                            //黑叉--------------------------------------------------
+            %>
+                <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                      class="glyphicon glyphicon-remove mystage"
+                      data-toggle="popover" data-placement="bottom"
+                      data-content="<%=dv.getText()%>" style="color: #000000;"></span>
+                -----------
+            <%
+
+                        }
+                    }else{
+                        //前七个都是黑圈
+
+                        //黑圈---------------------------------------------------
+            %>
+                <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                      class="glyphicon glyphicon-record mystage"
+                      data-toggle="popover" data-placement="bottom"
+                      data-content="<%=dv.getText()%>" style="color: #000000;"></span>
+                -----------
+            <%
+
+                    }
+                }
+
+            //当前阶段可能性不为0，后两个一定是黑叉，前七个有绿色标记，绿色圆圈，黑色圆圈
+            }else{
+                //准备当前阶段对应的下标
+                int index = 0;
+
+                //找出下标
+                for (int i = 0; i < dvList.size(); i++) {
+                    DicValue dv = dvList.get(i);
+                    String listStage = dv.getValue();
+                    //String listPossibility = pMap.get(listStage);
+                    if(listStage.equals(currentStage)){
+                        index = i;
+                        break;
+                    }
+                }
+
+
+                for (int i = 0; i < dvList.size(); i++) {
+                    DicValue dv = dvList.get(i);
+                    String listStage = dv.getValue();
+                    String listPossibility = pMap.get(listStage);
+
+                    if ("0".equals(listPossibility)){
+                        //一定为黑叉
+                        //黑叉------------------------------------------
+                    %>
+                        <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                              class="glyphicon glyphicon-remove mystage"
+                              data-toggle="popover" data-placement="bottom"
+                              data-content="<%=dv.getText()%>" style="color: #000000;"></span>
+                        -----------
+                    <%
+
+                    //当前阶段不为0
+                    }else{
+                        //当前阶段
+                        if(i == index){
+                            //绿色标记-----------------------------
+                    %>
+                        <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                              class="glyphicon glyphicon-map-marker mystage"
+                              data-toggle="popover" data-placement="bottom"
+                              data-content="<%=dv.getText()%>" style="color: #90F790;"></span>
+                        -----------
+                    <%
+                        //小于当前阶段
+                        }else if(i < index){
+                            //绿圈------------------------------
+                    %>
+                        <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                              class="glyphicon glyphicon-ok-circle mystage"
+                              data-toggle="popover" data-placement="bottom"
+                              data-content="<%=dv.getText()%>" style="color: #90F790;"></span>
+                        -----------
+                    <%
+                        //大于当前阶段
+                        }else{
+                            //黑圈----------------------------------
+                    %>
+                        <span id="<%=i%>" onclick="changeStage('<%=listStage%>','<%=i%>')"
+                              class="glyphicon glyphicon-record mystage"
+                              data-toggle="popover" data-placement="bottom"
+                              data-content="<%=dv.getText()%>" style="color: #000000;"></span>
+                        -----------
+                    <%
+                        }
+
+                    }
+
+                }
+
+            }
 		%>
 		<!--<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="资质审查" style="color: #90F790;"></span>
 		-----------
@@ -231,7 +492,7 @@
 			<div style="width: 300px; color: gray;">客户名称</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.customerId}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">阶段</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${tran.stage}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="stage">${tran.stage}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -239,7 +500,7 @@
 			<div style="width: 300px; color: gray;">类型</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.type}&nbsp;&nbsp;</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">可能性</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${tran.possibility}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="possibility">${tran.possibility}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -263,7 +524,7 @@
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 70px;">
 			<div style="width: 300px; color: gray;">修改者</div>
-			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b>${tran.editBy}&nbsp;&nbsp;</b><small style="font-size: 10px; color: gray;">${tran.editTime}</small></div>
+			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b id="editBy">${tran.editBy}&nbsp;&nbsp;</b><small id="editTime" style="font-size: 10px; color: gray;">${tran.editTime}</small></div>
 			<div style="height: 1px; width: 550px; background: #D5D5D5; position: relative; top: -20px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 80px;">

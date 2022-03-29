@@ -89,7 +89,7 @@ public class ClueController extends HttpServlet {
 
         //传统请求，使用重定向或者是转发：要是需要使用request域中的值，就需要用转发，其他都用重定向
         if(flag1){
-            request.getRequestDispatcher(request.getContextPath() + "/workbench/clue/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/workbench/clue/index.jsp");
         }
     }
 

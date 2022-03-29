@@ -12,4 +12,6 @@ public interface ClueDao {
     int unbound(String relationId);
 
     Clue getClueById(String clueId);
+
+    int delete(String clueId);
 }
